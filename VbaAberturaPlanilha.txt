@@ -1,0 +1,7 @@
+Private Sub Workbook_Open()
+
+  Range("E8") = "OFF"
+  Range("E8").Font.Bold = True
+  Range("E8").Interior.Color = 2171391
+
+End Sub
