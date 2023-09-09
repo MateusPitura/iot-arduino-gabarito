@@ -1,0 +1,288 @@
+EstaPastaDeTrabalho:
+
+Private Sub Workbook_Open()
+
+  Range("E8") = "OFF"
+  Range("E8").Font.Bold = True
+  Range("E8").Interior.Color = 2171391
+
+End Sub
+_______________________________________________________________________
+Módulo 1:
+
+Sub Botão_Conexao()
+
+ On Error GoTo conexao
+ 
+ Close #1
+ 
+ portaCOM = Range("E6")
+ 'taxaConexao = Range("E8").Text
+ 
+ ReturnValue = Shell("mode.com " + portaCOM + " baud=9600 parity=n data=8 stop=2 to=off xon=off dtr=off rts=off") 'A posição das " influencia
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 2)
+ Open portaCOM For Binary Access Read Write As #1
+ 
+ Worksheets("Controle").Range("C41") = 0
+ 
+ Range("E8") = "ON"
+ Range("E8").Font.Bold = True
+ Range("E8").Interior.Color = 6411776
+ 
+ Call verificaPorta
+ 
+Exit Sub
+conexao:
+  MsgBox "Você precisa conectar o arduino no computador ou escolher a porta COM correta"
+  Range("E8") = "OFF"
+  Range("E8").Font.Bold = True
+  Range("E8").Interior.Color = 2171391
+ 
+End Sub
+Sub verificaPorta()
+
+On Error GoTo desconecta
+
+Dim tempo As Date
+
+If (Worksheets("Controle").Range("E8") = "ON") Then
+  tempo = Now + TimeValue("00:00:05")
+  Call Application.OnTime(tempo, "verificaPorta")
+  Put #1, , " "
+End If
+
+Exit Sub
+desconecta:
+  Worksheets("Controle").Range("E8") = "OFF"
+  Worksheets("Controle").Range("E8").Font.Bold = True
+  Worksheets("Controle").Range("E8").Interior.Color = 2171391
+  Close #1
+  Call Application.OnTime(tempo, "verificaPorta", , False)
+
+End Sub
+Sub Botão_Desconexao()
+
+ Close #1
+ 
+ Range("E8") = "OFF"
+ Range("E8").Font.Bold = True
+ Range("E8").Interior.Color = 2171391
+ 
+End Sub
+Sub Botão_Gabarito()
+ 
+ On Error GoTo Conecte
+ 
+ Put #1, , "G"
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ 
+ Worksheets("Controle").Range("C41") = 1
+ 
+ Letra1 = Range("K6")
+ Letra2 = Range("K8")
+ Letra3 = Range("K10")
+ Letra4 = Range("K12")
+ Letra5 = Range("K14")
+ 
+ leValor1 = Range("M6")
+ leValor2 = Range("M8")
+ leValor3 = Range("M10")
+ leValor4 = Range("M12")
+ leValor5 = Range("M14")
+ 
+ Valor1 = CStr(leValor1)
+ Valor2 = CStr(leValor2)
+ Valor3 = CStr(leValor3)
+ Valor4 = CStr(leValor4)
+ Valor5 = CStr(leValor5)
+ 
+ Select Case Letra1
+   Case "A"
+     Put #1, , "A"
+   Case "B"
+     Put #1, , "B"
+   Case "C"
+     Put #1, , "C"
+   Case "D"
+     Put #1, , "D"
+   Case "E"
+     Put #1, , "E"
+ End Select
+
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ Put #1, , Valor1
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ 
+ Select Case Letra2
+   Case "A"
+     Put #1, , "A"
+   Case "B"
+     Put #1, , "B"
+   Case "C"
+     Put #1, , "C"
+   Case "D"
+     Put #1, , "D"
+   Case "E"
+     Put #1, , "E"
+ End Select
+ 
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ Put #1, , Valor2
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ 
+ Select Case Letra3
+   Case "A"
+     Put #1, , "A"
+   Case "B"
+     Put #1, , "B"
+   Case "C"
+     Put #1, , "C"
+   Case "D"
+     Put #1, , "D"
+   Case "E"
+     Put #1, , "E"
+ End Select
+ 
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ Put #1, , Valor3
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ 
+ Select Case Letra4
+   Case "A"
+     Put #1, , "A"
+   Case "B"
+     Put #1, , "B"
+   Case "C"
+     Put #1, , "C"
+   Case "D"
+     Put #1, , "D"
+   Case "E"
+     Put #1, , "E"
+ End Select
+ 
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ Put #1, , Valor4
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ 
+ Select Case Letra5
+   Case "A"
+     Put #1, , "A"
+   Case "B"
+     Put #1, , "B"
+   Case "C"
+     Put #1, , "C"
+   Case "D"
+     Put #1, , "D"
+   Case "E"
+     Put #1, , "E"
+ End Select
+ 
+ Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+ Put #1, , Valor5
+ 
+Exit Sub
+Conecte:
+  MsgBox "Você precisa conectar ao arduino antes"
+ 
+End Sub
+Sub Botão_Corrigir()
+
+On Error GoTo Conecte
+
+Put #1, , ""
+
+If (Worksheets("Controle").Range("C41") = 1) Then
+
+  Put #1, , "R"
+  Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+
+  numero = Range("C40")
+  numeroCorrecao = CStr(numero)
+  Range("C40") = Range("C40") + 1
+  nomePlanilha = "Correção " + numeroCorrecao
+  Worksheets("Última correção").Range("A2:G102").ClearContents
+  Sheets("Controle").Select
+  Worksheets("Última correção").Range("R24") = Date
+    
+  leProvas = Range("S6")
+  Provas = CStr(leProvas)
+    
+  Put #1, , Provas
+  Application.Wait TimeSerial(Hour(Now()), Minute(Now()), Second(Now()) + 1)
+    
+  ContarB = 0
+  ContarA = 0
+  Fator = (Range("S6") + 1)
+  Linha = 1
+  Coluna = 1
+    
+   Do
+     ContarA = ContarA + 1
+     ContarB = 0
+     Linha = Linha + 1
+     Coluna = 1
+     Do
+       ContarB = ContarB + 1
+       MyString = ""
+       DoEvents
+        Do
+         char$ = Input(1, #1)
+         If (char$ > Chr(31)) Then 'Verifica se char é um caracter printável (menos que isso é símbolos estranhos)'
+           MyString = MyString + char$
+         End If
+       Loop Until (char$ = Chr(13)) 'Executa ate achar um ENTER'
+       Sheets("Última correção").Cells(Linha, Coluna).Value = MyString
+       Coluna = Coluna + 1
+     Loop Until (ContarB = 7)
+   Loop Until (ContarA = Fator)
+     
+   NotaMedia = Worksheets("Controle").Range("S8")
+   NotaMedia = NotaMedia / 100
+   NotaTotal = Worksheets("Última correção").Range("G2")
+   NotaMedia = NotaMedia * NotaTotal
+   Worksheets("Última correção").Range("I3:I102").Value = NotaMedia
+   
+   Worksheets("Última correção").ChartObjects("Gráfico 1").Activate
+   ActiveChart.Axes(xlValue).MaximumScale = Worksheets("Última correção").Range("G2")
+     
+   Worksheets("Última correção").Copy After:=Worksheets(Sheets.Count)
+   Sheets("Última correção (2)").Name = nomePlanilha
+   Worksheets("Última correção").ListObjects("Tabela1172345").Resize Range("$A$1:G3")
+   Sheets(nomePlanilha).Visible = True
+   Sheets(nomePlanilha).Select
+
+Else
+
+  MsgBox "Você precisa definir um gabarito antes de corrigir"
+
+End If
+
+Exit Sub
+Conecte:
+  MsgBox "Você precisa conectar ao arduino antes"
+
+End Sub
+Sub Botão_PDF()
+
+On Error GoTo TrataErro
+
+NomeInserido = InputBox("Você quer gerar um PDF de qual planilha?")
+If (Sheets(NomeInserido).Range("A55") <> "") Then
+    Sheets(NomeInserido).PageSetup.PrintArea = "A1:T102"
+Else
+    Sheets(NomeInserido).PageSetup.PrintArea = "A1:T54"
+End If
+
+ChDir "C:\Users\Pitura\Correções - Nuvem" 'Precisa ser alterado em outros computadores
+Worksheets(NomeInserido).ExportAsFixedFormat Type:=xlTypePDF, Filename:=NomeInserido, Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
+Worksheets(NomeInserido).PageSetup.PrintArea = "L3:M3"
+
+Exit Sub
+TrataErro:
+  If (NomeInserido = "") Then
+  Else
+    MsgBox "Você digitou o nome de uma planilha que não existe"
+    Call Botão_PDF
+  End If
+
+End Sub
