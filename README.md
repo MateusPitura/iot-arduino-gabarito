@@ -10,8 +10,6 @@
   <img src="https://img.shields.io/github/stars/MateusPitura/iot-arduino-gabarito?style=social" alt="Badge indicando quantidade de estrelas no repositório"> 
 </p> 
 
-> :checkered_flag: Este projeto está finalizado :checkered_flag:   
-
 ## Descrição 
 
 Este projeto consiste em uma máquina capaz de corrigir gabaritos de provas. Foi utilizado uma impressora, peças feitas em impressora 3D, Arduino e VBA. Desenvolvi para o meu TCC do curso técnico de Automatação Industrial do SENAI. Este repositório é apenas uma exposição do projeto alguns anos após ser finalizado, não representado de fato o versionamento do código. Para fazê-lo funcionar seria necessário o diagrama elétrico, um Arduino e a planilha em Excel para o VBA
